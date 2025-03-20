@@ -1,7 +1,6 @@
-// src/pages/Dashboard.js
+
 import React, { useState, useEffect } from 'react';
 import { fetchTopUsers, fetchPopularPosts, fetchLatestPosts } from '../api';
-
 function Dashboard() {
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -16,20 +15,17 @@ function Dashboard() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
-        // Fetch data from all endpoints
+
         const [usersData, popularPostsData, latestPostsData] = await Promise.all([
           fetchTopUsers(),
           fetchPopularPosts(),
           fetchLatestPosts()
         ]);
         
-        // Calculate stats
         const allPosts = [...popularPostsData.posts, ...latestPostsData.posts];
         const uniquePosts = [...new Map(allPosts.map(post => [post.id, post])).values()];
         const uniqueUserIds = [...new Set(uniquePosts.map(post => post.userid))];
-        
-        // Calculate average comments
+
         const totalComments = uniquePosts.reduce((sum, post) => sum + post.commentCount, 0);
         const avgComments = uniquePosts.length > 0 ? (totalComments / uniquePosts.length).toFixed(1) : 0;
         
